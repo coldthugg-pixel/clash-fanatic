@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Last Seen</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+<header class="header">
+<button class="icon-btn">☰</button>
+<h1>Last Seen</h1>
+<button class="icon-btn" id="themeToggle">🌓</button>
+</header>
+
+<div class="seen-wrapper">
+
+<div id="lastSeenList"></div>
+
+<button class="clear-btn" onclick="clearHistory()">
+Очистить историю
+</button>
+
+</div>
+
+<nav class="bottom-nav">
+<button class="nav-item" onclick="location.href='index.html'">📋<span>Copy</span></button>
+<button class="nav-item" onclick="location.href='armies.html'">⚔️<span>Armies</span></button>
+<button class="nav-item" onclick="location.href='tips.html'">⭐<span>Tips</span></button>
+<button class="nav-item active" onclick="location.href='lastseen.html'">🕒<span>Seen</span></button>
+<button class="nav-item" onclick="location.href='profile.html'">👤<span>Profile</span></button>
+</nav>
+
+</div>
+
+<script src="script.js"></script>
+
+<script>
+const container=document.getElementById("lastSeenList");
+let history=JSON.parse(localStorage.getItem("lastSeen"))||[];
+
+function renderHistory(){
+container.innerHTML="";
+
+if(history.length===0){
+container.innerHTML=`
+<div class="empty-card">
+История пуста
+</div>
+`;
+return;
+}
+
+history.forEach(item=>{
+const card=document.createElement("div");
+card.className="seen-card";
+card.innerText=item;
+container.appendChild(card);
+});
+}
+
+function clearHistory(){
+localStorage.removeItem("lastSeen");
+history=[];
+renderHistory();
+}
+
+renderHistory();
+</script>
+
+</body>
+</html>
