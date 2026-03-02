@@ -1,5 +1,3 @@
-// ================= GLOBAL SAFE INIT =================
-
 document.addEventListener("DOMContentLoaded", function(){
 
 // ================= THEME =================
@@ -19,9 +17,59 @@ document.body.classList.contains("dark") ? "dark" : "light");
 }
 
 
+// ================= DEV MODE =================
+
+let devMode = localStorage.getItem("devMode") === "true";
+
+const devBtn = document.getElementById("devModeBtn");
+const devModal = document.getElementById("devModal");
+const confirmDev = document.getElementById("confirmDev");
+const cancelDev = document.getElementById("cancelDev");
+const devPassword = document.getElementById("devPassword");
+
+if(devBtn && devModal){
+
+if(devMode){
+devBtn.innerText = "Выйти из режима разработчика";
+devBtn.style.background = "#34c759";
+}
+
+devBtn.addEventListener("click", ()=>{
+
+if(devMode){
+localStorage.removeItem("devMode");
+location.reload();
+return;
+}
+
+devModal.style.display = "flex";
+
+});
+
+devBtn.addEventListener("click", ()=>{
+devModal.style.display = "flex";
+});
+
+cancelDev.addEventListener("click", ()=>{
+devModal.style.display = "none";
+});
+
+confirmDev.addEventListener("click", ()=>{
+if(devPassword.value === "dev123"){
+localStorage.setItem("devMode","true");
+alert("Dev Mode активирован");
+location.reload();
+}else{
+alert("Неверный пароль");
+}
+});
+
+}
+
+
 // ================= BASE FILTERS =================
 
-const bases = [
+let bases = JSON.parse(localStorage.getItem("bases")) || [
 {type:"farming",title:"Farming Base TH18",img:"https://picsum.photos/400/250?1"},
 {type:"ranked",title:"Legend Push TH18",img:"https://picsum.photos/400/250?2"},
 {type:"clan",title:"Clan War Base TH18",img:"https://picsum.photos/400/250?3"}
@@ -37,7 +85,7 @@ baseList.innerHTML = "";
 
 bases
 .filter(b => b.type === type)
-.forEach(b => {
+.forEach((b,index)=>{
 
 const card = document.createElement("div");
 card.className = "base-card";
@@ -45,12 +93,40 @@ card.className = "base-card";
 card.innerHTML = `
 <img src="${b.img}">
 <div class="base-title">${b.title}</div>
-<button class="copy-btn">Copy Base</button>
+${devMode ? `<button class="delete-btn">Удалить</button>` : ""}
 `;
 
 baseList.appendChild(card);
 
+if(devMode){
+card.querySelector(".delete-btn").addEventListener("click", ()=>{
+bases.splice(index,1);
+localStorage.setItem("bases",JSON.stringify(bases));
+render(type);
 });
+}
+
+});
+
+if(devMode){
+const addBtn = document.createElement("button");
+addBtn.innerText = "➕ Добавить";
+addBtn.className = "copy-btn";
+addBtn.style.marginTop = "10px";
+
+addBtn.addEventListener("click", ()=>{
+const title = prompt("Название:");
+const img = prompt("Ссылка на картинку:");
+if(title && img){
+bases.push({type:type,title:title,img:img});
+localStorage.setItem("bases",JSON.stringify(bases));
+render(type);
+}
+});
+
+baseList.appendChild(addBtn);
+}
+
 }
 
 render("farming");
@@ -209,27 +285,20 @@ const langToggle = document.getElementById("langToggle");
 let lang = localStorage.getItem("lang") || "ru";
 
 const translations = {
-ru:{
-farming:"🌾 ФАРМИНГ",
-ranked:"🏆 РЕЙТИНГ",
-clan:"⚔ КЛАН"
-},
-en:{
-farming:"🌾 FARMING",
-ranked:"🏆 RANKED",
-clan:"⚔ CLAN"
-}
+ru:{ farming:"🌾 ФАРМИНГ", ranked:"🏆 РЕЙТИНГ", clan:"⚔ КЛАН" },
+en:{ farming:"🌾 FARMING", ranked:"🏆 RANKED", clan:"⚔ CLAN" }
 };
 
 function applyLang(){
 document.querySelectorAll(".filter-btn").forEach(btn=>{
+if(translations[lang][btn.dataset.type]){
 btn.innerText = translations[lang][btn.dataset.type];
+}
 });
 }
 
 if(langToggle){
 applyLang();
-
 langToggle.addEventListener("click", ()=>{
 lang = lang === "ru" ? "en" : "ru";
 localStorage.setItem("lang", lang);
