@@ -14,27 +14,67 @@
 <header class="header">
 <button class="icon-btn">☰</button>
 <h1>Profile</h1>
+<div style="display:flex;gap:10px;">
 <button class="icon-btn" id="themeToggle">🌓</button>
+</div>
 </header>
 
 <div class="profile-wrapper">
 
-<div class="profile-card">
-
+<!-- MAIN PROFILE -->
+<div class="profile-card main-profile">
 <div class="avatar-wrapper">
-<img src="https://picsum.photos/200" class="avatar">
+<img src="https://picsum.photos/200" class="avatar" id="avatar">
 </div>
 
-<h2 class="profile-name">Player X</h2>
-<p class="profile-username">@guest</p>
+<h2 class="profile-name" id="profileName">Player X</h2>
+<p class="profile-username" id="profileUsername">@guest</p>
 
-<button class="edit-btn">Изменить ник</button>
+<button class="edit-btn" id="editNameBtn">Изменить ник</button>
+</div>
 
-<button class="telegram-btn">
+<!-- STATS -->
+<div class="profile-card">
+<h3 class="section-title">Статистика</h3>
+<div class="stat-item">🏆 <span id="trophies"></span></div>
+<div class="stat-item">🏰 TH <span id="thLevel"></span></div>
+<div class="stat-item">⚔️ <span id="favoriteArmy"></span></div>
+</div>
+
+<!-- LEVEL -->
+<div class="profile-card">
+<h3 class="section-title">Уровень</h3>
+
+<div class="level-wrapper">
+<div class="level-info">
+<span id="levelNumber"></span>
+<span id="xpText"></span>
+</div>
+
+<div class="xp-bar">
+<div class="xp-progress" id="xpProgress"></div>
+</div>
+</div>
+
+</div>
+
+<!-- ACHIEVEMENTS -->
+<div class="profile-card">
+<h3 class="section-title">Достижения</h3>
+<div class="achievement">🥇 1000 атак</div>
+<div class="achievement">🏆 Легендарная лига</div>
+<div class="achievement">⚔️ 500 клан войн</div>
+</div>
+
+<!-- ACTIVITY -->
+<div class="profile-card">
+<h3 class="section-title">Активность</h3>
+<div id="activityBlock"></div>
+</div>
+
+<button class="telegram-btn" id="telegramBtn">
 Перейти в Telegram канал
 </button>
-
-</div>
 
 </div>
 
@@ -46,6 +86,18 @@
 <button class="nav-item active" onclick="location.href='profile.html'">👤<span>Profile</span></button>
 </nav>
 
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="editModal">
+<div class="modal-content">
+<h3>Изменить ник</h3>
+<input type="text" id="nameInput" placeholder="Введите новый ник">
+<div class="modal-buttons">
+<button id="cancelEdit">Отмена</button>
+<button id="saveEdit">Сохранить</button>
+</div>
+</div>
 </div>
 
 <script src="script.js"></script>
